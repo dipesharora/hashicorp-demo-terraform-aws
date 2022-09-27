@@ -18,11 +18,6 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-variable "ami_id" {
-  description = "The AMI ID for the Amazon Machine Image."
-  default     = "ami-04b3c146f744907c7"
-}
-
 variable "ssh_key_name" {
   description = "The SSH Key Name in AWS to be used with EC2 instance."
   default     = "DA Default Key"

@@ -53,8 +53,22 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
+# Retrieve information about the HCP Packer "iteration"
+data "hcp_packer_iteration" "ubuntu2204lts_iteration" {
+  bucket_name = "ubuntu-2204-lts"
+  channel     = "release"
+}
+
+# Retrieve information about the HCP Packer "image"
+data "hcp_packer_image" "ubuntu2204lts_image" {
+  bucket_name    = "ubuntu-2204-lts"
+  iteration_id   = data.hcp_packer_iteration.ubuntu2204lts_iteration.id
+  cloud_provider = "aws"
+  region         = "us-east-1"
+}
+
 resource "aws_instance" "webserver" {
-  ami                    = var.ami_id
+  ami                    = data.hcp_packer_image.ubuntu2204lts_image.cloud_image_id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.web_subnet.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
